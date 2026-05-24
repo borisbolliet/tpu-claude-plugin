@@ -15,7 +15,8 @@
       "tags": ["tpu", "gcp", "jax", "tunix", "v6e", "v5e", "flax"],
       "source": {
         "source": "url",
-        "url": "https://github.com/borisbolliet/tpu-claude-plugin.git"
+        "url": "https://github.com/borisbolliet/tpu-claude-plugin.git",
+        "sha": "751810e9677923fc2886f8c99a68a259529db797"
       },
       "homepage": "https://github.com/borisbolliet/tpu-claude-plugin"
     }
