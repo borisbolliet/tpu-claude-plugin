@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "tpu-claude-plugin",
   "owner": {
     "name": "Boris Bolliet",
@@ -9,11 +9,15 @@
   "plugins": [
     {
       "name": "tpu",
-      "source": ".",
       "description": "Google Cloud TPU v6e / v5e helper: create + bootstrap + connect + delete VMs via gcloud, encoding the recipes and pitfalls from the tpu-2026 workspace (uv-not-PPA python3.12, libtpu for jax, flax install order, IAP-tunnelled SSH, Cloud NAT).",
       "version": "0.1.0",
       "category": "infrastructure",
-      "tags": ["tpu", "gcp", "jax", "tunix", "v6e", "v5e", "flax"]
+      "tags": ["tpu", "gcp", "jax", "tunix", "v6e", "v5e", "flax"],
+      "source": {
+        "source": "url",
+        "url": "https://github.com/borisbolliet/tpu-claude-plugin.git"
+      },
+      "homepage": "https://github.com/borisbolliet/tpu-claude-plugin"
     }
   ]
 }
