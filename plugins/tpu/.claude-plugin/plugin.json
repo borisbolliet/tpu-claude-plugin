@@ -1,24 +1,9 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "tpu",
-  "displayName": "Google Cloud TPU helper",
-  "description": "Specialised Claude assistance for working with Google Cloud TPU v6e VMs. Skills for spinning up VMs (with the right Cloud NAT + IAP firewall + Private Google Access in any region), bootstrapping the python venv (uv + jax-from-git + tunix + libtpu), opening IAP-tunnelled SSH + Jupyter port-forwards, and tearing down. Captures the recipes and pitfalls learned from the tpu-2026 project (PPA blocked from internal-IP VMs, libtpu needed for jax, flax install order, etc.).",
   "version": "0.1.0",
+  "description": "Google Cloud TPU v6e / v5e helper: create + bootstrap + connect + delete VMs via gcloud. Encodes the recipes and pitfalls from the tpu-2026 workspace (uv-not-PPA python3.12, libtpu for jax, flax install order, IAP-tunnelled SSH, Cloud NAT).",
   "author": {
     "name": "Boris Bolliet",
     "email": "boris.bolliet@gmail.com"
-  },
-  "homepage": "https://github.com/borisbolliet/tpu-claude-plugin",
-  "license": "MIT",
-  "keywords": [
-    "tpu",
-    "google-cloud",
-    "gcp",
-    "jax",
-    "tunix",
-    "flax",
-    "v6e",
-    "v5e",
-    "tunix"
-  ]
+  }
 }
