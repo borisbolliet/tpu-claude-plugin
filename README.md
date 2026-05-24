@@ -46,17 +46,26 @@ needed for IAP SSH, ...).
 
 ## Install
 
-Local testing (no marketplace needed):
-
-```bash
-claude --plugin-dir ~/GitHub/tpu-claude-plugin
-```
-
-From a marketplace (once published):
+In any Claude Code session, run these three commands:
 
 ```
-/plugin marketplace add <owner>/<marketplace-repo>
-/plugin install tpu@<marketplace-name>
+/plugin marketplace add https://github.com/borisbolliet/tpu-claude-plugin.git
+/plugin install tpu@tpu-claude-plugin
+/reload-plugins
+```
+
+After `/reload-plugins`, `/tpu:explain`, `/tpu:setup`, `/tpu:bootstrap`,
+`/tpu:connect`, `/tpu:delete` show in `/help` and the `tpu-engineer`
+subagent appears in the Agent picker.
+
+To update later (after I push a new commit):
+
+```
+/plugin uninstall tpu@tpu-claude-plugin
+/plugin marketplace remove tpu-claude-plugin
+/plugin marketplace add https://github.com/borisbolliet/tpu-claude-plugin.git
+/plugin install tpu@tpu-claude-plugin
+/reload-plugins
 ```
 
 ## Environment
@@ -85,16 +94,18 @@ When done:
 ## Layout
 
 ```
-.claude-plugin/plugin.json
-skills/
-  explain/SKILL.md            # always-on knowledge
-  explain/reference.md        # loaded on demand
-  setup/SKILL.md              # /tpu:setup
-  bootstrap/SKILL.md          # /tpu:bootstrap
-  connect/SKILL.md            # /tpu:connect
-  delete/SKILL.md             # /tpu:delete
-agents/
-  tpu-engineer.md             # subagent
+.claude-plugin/marketplace.json    # single-plugin marketplace
+plugins/tpu/
+  .claude-plugin/plugin.json       # plugin manifest
+  skills/
+    explain/SKILL.md               # always-on knowledge
+    explain/reference.md           # loaded on demand
+    setup/SKILL.md                 # /tpu:setup
+    bootstrap/SKILL.md             # /tpu:bootstrap
+    connect/SKILL.md               # /tpu:connect
+    delete/SKILL.md                # /tpu:delete
+  agents/
+    tpu-engineer.md                # subagent
 ```
 
 ## License
