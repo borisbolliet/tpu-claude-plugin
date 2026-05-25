@@ -165,4 +165,38 @@ machine-readable list but the human web UI is faster for one-shots.
 | `apt-get install python3.12` fails (`ppa.launchpadcontent.net`) | PPA blocked from internal-IP subnet | use `uv python install 3.12` |
 | `jax.default_backend() == 'cpu'` on a TPU VM | `libtpu` not installed | `pip install libtpu` |
 | SSH "Permission denied" | not using `--tunnel-through-iap` | use the alpha-track SSH command |
+| `scp: connect to host 10.x.x.x port 22: Operation timed out` | scp tried the internal IP, no IAP tunnel | use `gcloud alpha compute tpus tpu-vm scp --tunnel-through-iap`; see the `transfer` skill |
+| `unrecognized arguments: --tunnel-through-iap` for scp/ssh | wrong gcloud release track | always use `gcloud alpha compute tpus tpu-vm ...` for tpu-vm ssh/scp |
+| scp silently skipped a directory | omitted `--recurse` | re-run with `--recurse` |
 | `from cobaya import LoggedError` fails | CWD has a `cobaya/` folder shadowing the install | `cd /tmp` first |
+
+## File transfer (scp via IAP)
+
+For copying files between a TPU VM (internal-IP only) and your
+laptop, use the alpha-track `scp` over the IAP tunnel — same
+auth path as the SSH command. Concrete recipes + push direction
++ pitfalls live in the `transfer` skill (`/tpu:transfer`); the
+one-line summary:
+
+```bash
+# pull
+gcloud alpha compute tpus tpu-vm scp --recurse \
+    --zone=$ZONE --project=$PROJECT_ID --tunnel-through-iap \
+    $TPU_NAME:$REMOTE_PATH $LOCAL_PATH
+
+# push (swap src and dst)
+gcloud alpha compute tpus tpu-vm scp --recurse \
+    --zone=$ZONE --project=$PROJECT_ID --tunnel-through-iap \
+    $LOCAL_PATH $TPU_NAME:$REMOTE_PATH
+```
+
+Three points the troubleshooting table can't capture in one line:
+
+- Single files work without `--recurse`; the flag is required only
+  for directories and harmless otherwise — default to including it.
+- The IAP tunnel is slow without NumPy in the laptop's gcloud python
+  (the first run prints a warning with a link). Fine for hundreds of
+  MB, worth fixing for multi-GB.
+- `scp` does not resume mid-transfer. For multi-GB payloads on a
+  flaky link, prefer `rsync` over a manually-opened IAP tunnel, or
+  `split -b 500M` the source and `cat` it back on the destination.

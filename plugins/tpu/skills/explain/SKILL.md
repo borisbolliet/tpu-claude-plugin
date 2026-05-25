@@ -1,6 +1,6 @@
 ---
 description: Google Cloud TPU v6e (and v5e) workflow knowledge — VM creation with internal IPs + Cloud NAT + IAP, python3.12 bootstrap via uv (the PPA path is blocked from internal-IP VMs), the jax-from-git / tunix / qwix / flax install order with libtpu, SSH + Jupyter via IAP tunnel, GitHub push from the VM via short-lived PAT. Auto-loads when the conversation is about TPU, gcloud, jax on TPU, tunix, flax, or running cosmology / ML on Google Cloud accelerators.
-when_to_use: User mentions TPU, v6e, v5e, gcloud compute tpus, tunix, jax-on-tpu, libtpu, qwix, flax git, IAP tunnel, Cloud NAT, internal-IP VM, Private Google Access, europe-west4 / us-east5 / us-central2 TPU zones, bootstrap.sh, requirements.txt for TPU.
+when_to_use: User mentions TPU, v6e, v5e, gcloud compute tpus, tunix, jax-on-tpu, libtpu, qwix, flax git, IAP tunnel, Cloud NAT, internal-IP VM, Private Google Access, europe-west4 / us-east5 / us-central2 TPU zones, bootstrap.sh, requirements.txt for TPU, copying / scp / rsync / transferring files to or from a TPU VM, pulling a checkpoint or tarball off a TPU before deleting it.
 allowed-tools: Read Grep Glob Bash(gcloud *) Bash(ssh *) Bash(scp *) Bash(cat *) Bash(grep *) Bash(ls *) Bash(curl -sSL *)
 ---
 
@@ -20,6 +20,7 @@ done. Recipes adapted from
 | Each new VM (same region) | `/tpu:setup` | skips the one-time steps; just creates the VM |
 | First login to a new VM | `/tpu:bootstrap` | installs python3.12 via `uv`, creates `~/venvs/tunix`, runs the tunix install order |
 | Routine SSH / Jupyter | `/tpu:connect` | opens IAP tunnel SSH (+ optional port-forward for 8888 / 6006) |
+| Copy files in / out | `/tpu:transfer` | IAP-tunnelled `scp` for pulling tarballs / checkpoints off (or pushing scripts / datasets up) |
 | Cleanup | `/tpu:delete` | deletes the VM (does NOT delete NAT / firewall / subnet config) |
 
 ## Architecture
@@ -226,8 +227,11 @@ The kernel to pick is **tunix** (registered by `bootstrap.sh` via
       push origin main
   ```
 - **alpha SDK channel**: `--tunnel-through-iap` for tpu-vm is only
-  in the `alpha` track. Use `gcloud alpha compute tpus tpu-vm ssh ...`
-  not `gcloud compute tpus tpu-vm ssh ...`.
+  in the `alpha` track — applies to **both** `ssh` and `scp`. Use
+  `gcloud alpha compute tpus tpu-vm ssh ...` /
+  `gcloud alpha compute tpus tpu-vm scp ...`, not the stable-track
+  forms. The stable channel rejects the flag with an explicit
+  "available in one or more alternate release tracks" hint.
 - **Internal-IP VMs need Cloud NAT for pypi**. Without NAT,
   `pip install jax` times out silently. Easy to miss because the
   symptom looks like a slow connection, not a config error.

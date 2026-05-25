@@ -37,6 +37,12 @@ needed for IAP SSH, ...).
   in their own terminal (interactive SSH doesn't survive a single
   tool call).
 
+- **`/tpu:transfer <src> <dst> [--zone=...]`** — copy files to / from
+  a TPU VM via IAP-tunnelled `scp`. Use it to pull tarballs /
+  checkpoints / outputs off a VM before deleting it, or push
+  scripts / datasets up. Handles the alpha-track flag, `--recurse`,
+  and the internal-IP / IAP gotcha that breaks plain `scp`.
+
 - **`/tpu:delete <name> [--also-network]`** — tear down the VM.
   By default keeps the per-region networking so the next VM comes
   up fast; `--also-network` does the full clean-up.
@@ -103,6 +109,7 @@ plugins/tpu/
     setup/SKILL.md                 # /tpu:setup
     bootstrap/SKILL.md             # /tpu:bootstrap
     connect/SKILL.md               # /tpu:connect
+    transfer/SKILL.md              # /tpu:transfer
     delete/SKILL.md                # /tpu:delete
   agents/
     tpu-engineer.md                # subagent
